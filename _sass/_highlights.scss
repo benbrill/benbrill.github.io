@@ -1,17 +1,18 @@
 
 pre.highlight {
-  background-color: #fcfcfc;
+  background-color: #ffffff;
   padding: 7px 7px 7px 10px;
   border: 1px solid #ddd;
   -moz-box-shadow: 3px 3px rgba(0,0,0,0.1);
   -webkit-box-shadow: 3px 3px rgba(0,0,0,0.1);
-  box-shadow: 3px 3px rgba(0,0,0,0.1);
+  box-shadow: 3px 3px 5px rgba(0,0,0,0.3);
+  border-radius: 7px;
   margin: 10px 0 10px 0;
-  overflow: scroll;
+  overflow: none;
 }
 
 code {
-  font-family: 'Fira Mono', monospace;
+  font-family: 'Courier New', Courier, monospace;
 }
 
 .highlight .hll { background-color: #ffffcc }
