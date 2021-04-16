@@ -1,6 +1,6 @@
 
 pre.highlight {
-  background-color: #ebebeb;
+  background-color: #1d1d1d;
   padding: 7px 7px 7px 10px;
   // border: 1px solid #ddd;
   border-radius: 7px;
@@ -11,9 +11,11 @@ pre.highlight {
 
 code {
   font-family: 'Roboto Mono', 'Courier New', Courier, monospace;
-  background-color: #ebebeb;
+  color: #ffffff;
+  background-color: #1d1d1d;
   padding: 2px 5px;
   border-radius: 3px; 
+  font-size: 90%;
 }
 
 .highlight .hll { background-color: #ffffcc }
