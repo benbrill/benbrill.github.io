@@ -3,7 +3,6 @@ layout: post
 title: Spectral Clustering
 image: benbrill.github.io\images\ucla-math.png
 ---
-# Creating a Spectral Clustering algorithm
 
 In this problem, we'll study *spectral clustering*. Spectral clustering is an important tool for identifying meaningful parts of data sets with complex structure. To start, let's look at an example where we *don't* need spectral clustering. 
 
@@ -31,7 +30,7 @@ plt.scatter(X[:,0], X[:,1])
 
 
     
-![svg](blogpost2_files/blogpost2_2_1.svg)
+![svg](../images/blogpost2_files/blogpost2_2_1.png)
     
 
 
@@ -55,7 +54,7 @@ plt.scatter(X[:,0], X[:,1], c = km.predict(X))
 
 
     
-![svg](blogpost2_files/blogpost2_4_1.svg)
+![svg](../images/blogpost2_files/blogpost2_4_1.svg)
     
 
 
@@ -80,7 +79,7 @@ plt.scatter(X[:,0], X[:,1])
 
 
     
-![svg](blogpost2_files/blogpost2_6_1.svg)
+![svg](../images/blogpost2_files/blogpost2_6_1.svg)
     
 
 
@@ -102,7 +101,7 @@ plt.scatter(X[:,0], X[:,1], c = km.predict(X))
 
 
     
-![svg](blogpost2_files/blogpost2_8_1.svg)
+![svg](../images/blogpost2_files/blogpost2_8_1.svg)
     
 
 
@@ -488,7 +487,7 @@ plt.scatter(X[:,0], X[:,1], c = colors)
 
 
     
-![svg](blogpost2_files/blogpost2_30_1.svg)
+![svg](../images/blogpost2_files/blogpost2_30_1.svg)
     
 
 
@@ -542,7 +541,7 @@ plt.scatter(X[:,0], X[:,1], c = colors)
 
 
     
-![svg](blogpost2_files/blogpost2_32_1.svg)
+![svg](../images/blogpost2_files/blogpost2_32_1.svg)
     
 
 
@@ -628,7 +627,7 @@ plt.scatter(X[:,0], X[:,1], c = colors)
 
 
     
-![svg](blogpost2_files/blogpost2_37_1.svg)
+![svg](../images/blogpost2_files/blogpost2_37_1.svg)
     
 
 
@@ -653,7 +652,7 @@ plt.scatter(X[:,0], X[:,1], c = colors)
 
 
     
-![svg](blogpost2_files/blogpost2_39_1.svg)
+![svg](../images/blogpost2_files/blogpost2_39_1.svg)
     
 
 
@@ -674,7 +673,7 @@ plt.scatter(X[:,0], X[:,1], c = colors)
 
 
     
-![svg](blogpost2_files/blogpost2_40_1.svg)
+![svg](../images/blogpost2_files/blogpost2_40_1.svg)
     
 
 
@@ -698,7 +697,7 @@ plt.scatter(X[:,0], X[:,1])
 
 
     
-![svg](blogpost2_files/blogpost2_42_1.svg)
+![svg](../images/blogpost2_files/blogpost2_42_1.svg)
     
 
 
@@ -720,7 +719,7 @@ plt.scatter(X[:,0], X[:,1], c = km.predict(X))
 
 
     
-![png](blogpost2_files/blogpost2_44_1.png)
+![png](../images/blogpost2_files/blogpost2_44_1.png)
     
 
 
@@ -741,7 +740,7 @@ plt.scatter(X[:,0], X[:,1], c = colors)
 
 
     
-![svg](blogpost2_files/blogpost2_46_1.svg)
+![svg](../images/blogpost2_files/blogpost2_46_1.svg)
     
 
 
