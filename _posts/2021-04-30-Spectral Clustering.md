@@ -4,8 +4,7 @@ title: Spectral Clustering
 image: benbrill.github.io\images\ucla-math.png
 ---
 
-In this problem, we'll study *spectral clustering*. Spectral clustering is an important tool for identifying meaningful parts of data sets with complex structure. To start, let's look at an example where we *don't* need spectral clustering. 
-
+In this blog post, we will be exploring *clustering*. Clustering objects might seem intuitively easy to the human mind, but computers must have some mathmatical process to replace our intution.
 
 ```python
 import numpy as np
@@ -34,7 +33,7 @@ plt.scatter(X[:,0], X[:,1])
     
 
 
-*Clustering* refers to the task of separating this data set into the two natural "blobs." K-means is a very common way to achieve this task, which has good performance on circular-ish blobs like these: 
+If we take a look at these blobs, we can imagine how we might cluster them. But let's take a look at how a computer might cluster them using `kmeans`.
 
 
 ```python
@@ -57,10 +56,7 @@ plt.scatter(X[:,0], X[:,1], c = km.predict(X))
 ![svg](../images/blogpost2_files/blogpost2_4_1.svg)
     
 
-
-### Harder Clustering
-
-That was all well and good, but what if our data is "shaped weird"? 
+Looks pretty good! But what if we have some more complicated blobs.
 
 
 ```python
@@ -83,8 +79,6 @@ plt.scatter(X[:,0], X[:,1])
     
 
 
-We can still make out two meaningful clusters in the data, but now they aren't blobs but crescents. As before, the Euclidean coordinates of the data points are contained in the matrix `X`, while the labels of each point are contained in `y`. Now k-means won't work so well, because k-means is, by design, looking for circular clusters. 
-
 
 ```python
 km = KMeans(n_clusters = 2)
@@ -105,13 +99,11 @@ plt.scatter(X[:,0], X[:,1], c = km.predict(X))
     
 
 
-Whoops! That's not right! 
-
-As we'll see, spectral clustering is able to correctly cluster the two crescents. In the following problems, you will derive and implement spectral clustering. 
+`kmeans` does not perform as well as we thought. Is there any other method we can use to cluster these blobs? Enter: **Spectral Clustering**
 
 ## Constructing a similarity matrix
 
-Instead of looking for circles as a method to get clusters, we can use the distance between points to generate our clusters. To do this, we will generate an $$ n \times n$$ matrix where each row and column corresponds to a point in our matrix $$\mathbf{X}$$. Each entry $ij$ will correspond to the distance between points $$\mathbf{X}_i$$ and $$\mathbf{X}_j$$. 
+Instead of looking for circles as in `kmeans` as a method to get clusters, we can use the distance between points to generate our clusters. To do this, we will generate an $$ n \times n$$ matrix where each row and column corresponds to a point in our matrix $$\mathbf{X}$$. Each entry $$ij$$ will correspond to the distance between points $$\mathbf{X}_i$$ and $$\mathbf{X}_j$$. 
 
 Once we have a matrix of the pairwise distances, we will see if they lie within a specified distance, called epsilon. If the distance between two points is less than epsilon, we will replace that value with a 1 in a new similarity matrix $$\mathbf{A}$$, indicating these points have a potential connection. Otherwise, a pair of points that lies outside the distance epsilon will have a value 0. Beacause we do not want to compare the same points to each other, we will place 0's along the digagonal of the matrix. 
 
@@ -155,10 +147,10 @@ One of which is the *binary norm cut objective*, which can be described as
 $$N_{\mathbf{A}}(C_0, C_1)\equiv \mathbf{cut}(C_0, C_1)\left(\frac{1}{\mathbf{vol}(C_0)} + \frac{1}{\mathbf{vol}(C_1)}\right)\;.$$
 
 In this expression, 
-- $\mathbf{cut}(C_0, C_1) \equiv \sum_{i \in C_0, j \in C_1} a_{ij}$ is the *cut* of the clusters $C_0$ and $C_1$. 
-- $\mathbf{vol}(C_0) \equiv \sum_{i \in C_0}d_i$, where $d_i = \sum_{j = 1}^n a_{ij}$ is the *degree* of row $i$ (the total number of all other rows related to row $i$ through $A$). The *volume* of cluster $C_0$ is a measure of the size of the cluster. 
+- $$\mathbf{cut}(C_0, C_1) \equiv \sum_{i \in C_0, j \in C_1} a_{ij}$$ is the *cut* of the clusters $$C_0$$ and $$C_1$$. 
+- $\mathbf{vol}(C_0) \equiv \sum_{i \in C_0}d_i$, where $d_i = \sum_{j = 1}^n a_{ij}$ is the *degree* of row $i$ (the total number of all other rows related to row $i$ through $A$). 
 
-A pair of clusters $C_0$ and $C_1$ is considered to be a "good" partition of the data when $N_{\mathbf{A}}(C_0, C_1)$ is small. To see why, let's look at each of the two factors in this objective function separately. 
+Let's break this down piece by piece
 
 ### Cut
 
@@ -304,8 +296,7 @@ We can verify this vector is correct by checking to see if this equation is true
 $$\mathbf{N}_{\mathbf{A}}(C_0, C_1) = 2\frac{\mathbf{z}^T (\mathbf{D} - \mathbf{A})\mathbf{z}}{\mathbf{z}^T\mathbf{D}\mathbf{z}}\;,$$
 
 ```python
-D = np.zeros((200,200))
-np.fill_diagonal(D, A.sum(axis= 0))
+D = np.diag(sum(A))
 # calculate using formula
 rhs = 2*((z.T@(D-A)@z))/(z@D@z)
 # check to see if equal using computer precision
@@ -317,17 +308,13 @@ np.isclose(normcut(A,y), rhs)
 
     True
 
-
+{::options parse_block_html="true" /}
+<div class="got-help">
+In this section, I got some advice to use `D = np.diag(sum(A))` rather than initalizing an array of zeros and filling in the digaonals using the `fill_diagonal()` function! Great method to shorten my code and all it took was perhaps a little googling. 
+</div>
+{::options parse_block_html="false" /}
 
 ## Minimizing normcut objective
-
-In the last part, we saw that the problem of minimizing the normcut objective is mathematically related to the problem of minimizing the function 
-
-$$ R_\mathbf{A}(\mathbf{z})\equiv \frac{\mathbf{z}^T (\mathbf{D} - \mathbf{A})\mathbf{z}}{\mathbf{z}^T\mathbf{D}\mathbf{z}} $$
-
-subject to the condition $\mathbf{z}^T\mathbf{D}\mathbb{1} = 0$. It's actually possible to bake this condition into the optimization, by substituting for $\mathbf{z}$ the orthogonal complement of $\mathbf{z}$ relative to $\mathbf{D}\mathbf{1}$. In the code below, I define an `orth_obj` function which handles this for you. 
-
-Use the `minimize` function from `scipy.optimize` to minimize the function `orth_obj` with respect to $\mathbf{z}$. Note that this computation might take a little while. Explicit optimization can be pretty slow! Give the minimizing vector a name `z_`. 
 
 Now we can try to minimize our function, as to find the lowest value of the normcut objective to theoretically produce the best clusters. We can do this by by substituting for 
 by substituting for $$\mathbf{z}$$ the orthogonal complement of $$\mathbf{z}$$ relative to $$\mathbf{D}\mathbf{1}$$. This is done in the `orth_obj()` function.
@@ -409,7 +396,6 @@ z_
 
 
 
-**Note**: there's a cheat going on here! We originally specified that the entries of $\mathbf{z}$ should take only one of two values (back in Part C), whereas now we're allowing the entries to have *any* value! This means that we are no longer exactly optimizing the normcut objective, but rather an approximation. This cheat is so common that deserves a name: it is called the *continuous relaxation* of the normcut problem. 
 
 ## Did it work?
 
@@ -418,8 +404,8 @@ If we were to replot our points and clusters so that  `z_[i] < 0` represents one
 
 ```python
 colors = np.zeros(n)
-colors[z_ < 0] = 0
-colors[z_ > 0] = 1
+colors[z_ < -0.0015] = 0
+colors[z_ > -0.0015] = 1
 colors
 plt.scatter(X[:,0], X[:,1], c = colors)
 ```
@@ -433,11 +419,11 @@ plt.scatter(X[:,0], X[:,1], c = colors)
 
 
     
-![svg](../images/blogpost2_files/blogpost2_30_1.svg)
+![png](../images/blogpost2_files/newZ_.png)
     
-Umm, not really. 
+Kind of, but not really what we wanted.
 
-## Part F
+## Eigenstuffs
 
 I don't really understand this stuff so here is a good explaination of what happened: 
 
@@ -463,7 +449,6 @@ Why is this helpful? Well, $\mathbb{1}$ is actually the eigenvector with smalles
 
 > So, the vector $\mathbf{z}$ that we want must be the eigenvector with  the *second*-smallest eigenvalue. 
 
-Construct the matrix $\mathbf{L} = \mathbf{D}^{-1}(\mathbf{D} - \mathbf{A})$, which is often called the (normalized) *Laplacian* matrix of the similarity matrix $\mathbf{A}$. Find the eigenvector corresponding to its second-smallest eigenvalue, and call it `z_eig`. Then, plot the data again, using the sign of `z_eig` as the color. How did we do? 
 
 So we can build a matrix $\mathbf{L} = \mathbf{D}^{-1}(\mathbf{D} - \mathbf{A})$ so that we can extract the eigenvector corresponding to the second smallest eigenvalue and use this to graph our points once more. 
 
@@ -533,7 +518,11 @@ def spectral_clustering(X, epsilon):
     labels[z_eig > 0] = 1
     return labels
 ```
-
+{::options parse_block_html="true" /}
+<div class="gave-help">
+Since many of my peers had excellent code and explainations, I could primarily only find nitpicky errors. One of which was copying boiler plate code from lecture, which extracted both the second-to-last eigenvector and eigenvalue. In this problem, you will only need the eigenvector, so you can save a line of code by removing the extraction of the eigenvalue.
+</div>
+{::options parse_block_html="false" /}
 ```python
 colors = spectral_clustering(X, 0.4)
 plt.scatter(X[:,0], X[:,1], c = colors)
